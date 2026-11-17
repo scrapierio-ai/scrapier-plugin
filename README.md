@@ -27,7 +27,7 @@ these tools:
 | `search_endpoints` | Finds scraping endpoints that match a query | Free |
 | `get_endpoint_schema` | Shows an endpoint's parameters, credit cost and sample output | Free |
 | `run_scrape` | Runs a scrape and returns the results | Billed per successful call |
-| `get_scrape_result` | Collects or pages through the result of a slower scrape | Free |
+| `get_scrape_result` | Kept for compatibility: collects a job result if a scrape ever returns a `job_id` (`run_scrape` returns results directly) | Free |
 | `get_account` | Shows the signed-in account and its credit balance | Free |
 
 **Four skills**, plain Markdown files in `skills/`:

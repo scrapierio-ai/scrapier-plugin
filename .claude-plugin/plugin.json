@@ -1,7 +1,7 @@
 {
   "name": "scrapier",
   "displayName": "Scrapier",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Scrape structured public data from platforms such as Amazon, YouTube, LinkedIn, TikTok and Google Maps through the Scrapier MCP server, with skills for choosing endpoints, controlling credit use, batch scraping, writing code against the Scrapier REST API, and handling scraped content safely.",
   "author": {
     "name": "Scrapier",

@@ -100,17 +100,11 @@ what is left.
 
 ## If a call returns a job
 
-Occasionally a call returns a `job_id` with a status such as `running` instead
-of results. Collect it with `get_scrape_result` (polling is free). A finished
-job can carry:
-
-- `errors`: which inputs failed inside the job, and why
-- `inputs_truncated: true`: fewer inputs were accepted than you sent, so later
-  ones were never attempted
-- `data_truncated: true`: the result was capped, so what you have is incomplete
-
-`status: "completed"` does not mean every input succeeded. Check these fields
-and count them into your tally before reporting.
+`run_scrape` returns its results in the same call, so a batch normally never
+sees a job. If a call ever returns a `job_id` with a status such as `running`
+instead of results, collect it with `get_scrape_result` (free) and check its
+`errors`, `inputs_truncated` and `data_truncated` fields before counting it
+into your tally: `status: "completed"` does not mean every input succeeded.
 
 ## Cost
 

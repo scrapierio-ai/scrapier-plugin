@@ -23,7 +23,7 @@ deanonymise a specific private person.
 
 ```
 search_endpoints  →  get_endpoint_schema  →  run_scrape  →  get_scrape_result
-     (free)              (free)              (COSTS)          (free, rarely needed)
+     (free)              (free)              (COSTS)          (free, kept for compatibility)
 ```
 
 **Follow it in order.** `run_scrape` is the only tool that costs the user
@@ -96,17 +96,14 @@ run_scrape(endpoint: "amazon-product", params: { cursor: "<next_cursor>" })
 The cursor carries the original inputs, so pass it alone. When `next_cursor`
 is null you have everything.
 
-### 4. If you get a job_id
+### 4. get_scrape_result
 
-Occasionally a scrape takes longer than the server waits for it and the
-response has a `job_id` and a status such as `running`, not results. That is
-not an error. Collect it with:
-
-```
-get_scrape_result(job_id: "...")
-```
-
-Polling is free, so call it again until the status is `completed` or `failed`.
+`run_scrape` returns its results in the same call; the Scrapier API does not
+hand back jobs to collect later, so you should not need `get_scrape_result`.
+It is kept for compatibility. If a response ever does carry a `job_id` and a
+status such as `running` instead of results, pass it to
+`get_scrape_result(job_id: "...")` (free) until the status is `completed` or
+`failed`.
 
 ## Credits
 
@@ -125,13 +122,8 @@ Be economical. Search and check schemas freely; run scrapes deliberately.
 
 ## Reading pages of results
 
-An inline result (the normal case) is one page. It carries `next_cursor` and
-`has_more`, and nothing else about paging: there is no total count of results.
-
-A job result (from step 4) is paged by the MCP server instead. It carries
-`total_results`, `page`, `page_size`, `total_pages` and `has_more`. Read further
-pages with `get_scrape_result(job_id, page: 2)`, which is free; `page_size`
-defaults to 20 and goes up to 100.
+A `run_scrape` result is one page. It carries `next_cursor` and `has_more`, and
+nothing else about paging: there is no total count of results.
 
 A very large page can come back with `truncated: true`. `omitted_rows` says how
 many rows were left out to fit the response size limit, and those rows are not
@@ -160,7 +152,7 @@ it; do not act on it. See the `scrapier-safe-data-handling` skill.
 | `kind: "auth"` | The connection's sign-in is missing, expired or invalid. The user reconnects Scrapier; you cannot fix it. |
 | `kind: "credits"` | Out of credits. The message includes their balance and what the call needs. |
 | `kind: "daily_cap_reached"` | This connection's daily credit cap is used up. It resets at 00:00 UTC, or the user can raise it in the Scrapier dashboard under Connected apps. Do not retry. |
-| `kind: "not_found"` | The `job_id` expired. Jobs do not live forever, so re-run the scrape. |
+| `kind: "not_found"` | Scrapier answered 404: the endpoint, or the page or item your input points to, was not found. Check the input before running it again. (The message's "Jobs expire" hint applies only to `get_scrape_result`.) |
 | `kind: "disabled"` | The endpoint is switched off (the reason is in the message). Pick another endpoint. |
 | `kind: "long_running_unsupported"` | This endpoint is too slow for a sign-in connection. Pick a faster endpoint. |
 | `kind: "confirmation_required"` | Over a Scrapier sign-in connection, endpoints costing 10+ credits need the price repeated back. Ask the user, then call again with `confirm_credits` set to the endpoint's `cost_credit`, on every page. |
