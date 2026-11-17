@@ -1,0 +1,16 @@
+{
+  "name": "scrapier",
+  "description": "The Scrapier plugin for Claude Code: the Scrapier MCP server plus skills for using it.",
+  "owner": {
+    "name": "Scrapier",
+    "url": "https://scrapier.io"
+  },
+  "plugins": [
+    {
+      "name": "scrapier",
+      "source": "./",
+      "description": "Scrape structured public data through the Scrapier MCP server, with skills for endpoint discovery, credit use, batch scraping, the REST API and safe handling of scraped content.",
+      "category": "data"
+    }
+  ]
+}

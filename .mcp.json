@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "scrapier": {
+      "type": "http",
+      "url": "https://mcp.scrapier.io/mcp"
+    }
+  }
+}
