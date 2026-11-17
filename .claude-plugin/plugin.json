@@ -12,7 +12,7 @@
   "license": "MIT",
   "keywords": ["scraping", "web-scraping", "data-extraction", "mcp", "api", "ecommerce", "social-media"],
   "icon": "./assets/icon.png",
-  "documentationUrl": "https://docs.scrapier.io/ai/claude/",
+  "documentationUrl": "https://github.com/scrapierio-ai/scrapier-plugin#readme",
   "supportUrl": "https://scrapier.io/contact",
   "privacyPolicyUrl": "https://scrapier.io/privacy",
   "termsOfServiceUrl": "https://scrapier.io/terms"

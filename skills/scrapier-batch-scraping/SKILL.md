@@ -23,12 +23,13 @@ run_scrape(endpoint: "instagram-profile", params: { usernames: "nasa" })
 run_scrape(endpoint: "instagram-profile", params: { usernames: "spacex" })
 ```
 
-Do not pack several inputs into one call. `get_endpoint_schema` types a param
-as `["string", "array"]` only when the endpoint really accepts a list (today
-only `contact-extractor.urls`). Everywhere else the param is a plain `"string"`,
-and it expects a single value, not a list. The `Aliases:` in a description
-lists other names for the same single value. It does not mean the param takes
-several.
+Do not pack several inputs into one call. Params are plain `"string"` in
+`get_endpoint_schema` and expect a single value, even when the name looks
+plural (`urls`, `queries`, `usernames`). The rare param typed
+`["string", "array"]` accepts a list, but read its description: the endpoint
+may still work through the list one input per page, with each page billed. The
+`Aliases:` in a description lists other names for the same single value. It
+does not mean the param takes several.
 
 ## What a result looks like
 
@@ -61,8 +62,16 @@ For every input, record one of:
   done, not as something to retry
 - **failed**: `isError` was set, or `status` is `"failed"`
 
+If a result has `truncated: true`, it was shortened to fit the response size
+limit and `omitted_rows` rows were left out. Count those rows as not delivered,
+and do not count that input as fully scraped. The call was still billed, and
+re-running it is billed again and is likely to be cut the same way, so tell the
+user rather than retrying.
+
 Then report the real counts: *"47 of 50 scraped, 2 returned nothing, 1 failed
-(@example: auth wall)."* Never write "scraped all 50" unless the tally says so.
+(@example: auth wall)."* Add any truncation: *"the page for @example was cut
+short; 12 rows were not delivered."* Never write "scraped all 50" unless the
+tally says so.
 
 ## Paging: decide per input how deep to go
 
@@ -85,12 +94,17 @@ A failed call is not billed, so retrying it only costs time. Re-running an
 input that already succeeded, including one that came back empty, is billed
 again. Retry the **failed** inputs from your tally, not the whole list.
 
-## Slower endpoints return a job
+If a call fails with `kind: "daily_cap_reached"` or `kind: "credits"`, stop the
+batch: every remaining input would fail the same way. Report what was done and
+what is left.
 
-Some scrapes return a `job_id` instead of a result. Collect it with
-`get_scrape_result` (polling is free). A finished job can carry:
+## If a call returns a job
 
-- `errors`: which inputs failed inside the job (`chunk_inputs`), and why
+Occasionally a call returns a `job_id` with a status such as `running` instead
+of results. Collect it with `get_scrape_result` (polling is free). A finished
+job can carry:
+
+- `errors`: which inputs failed inside the job, and why
 - `inputs_truncated: true`: fewer inputs were accepted than you sent, so later
   ones were never attempted
 - `data_truncated: true`: the result was capped, so what you have is incomplete
@@ -100,10 +114,10 @@ and count them into your tally before reporting.
 
 ## Cost
 
-Every successful call is billed its `cost_credit` (1 to 4 credits, depending on the
-endpoint; see `get_endpoint_schema`) however many results it returns, and every page
-counts as a call. An empty result is still a successful call. Failed calls are
-not billed. Each result's `credits_charged` shows what that call actually
-cost, so add them up and give the user the total. What makes a batch expensive
-is the number of calls: one per input, times the pages you follow. Follow
+Every successful call is billed the endpoint's `cost_credit` (see
+`get_endpoint_schema`) however many results it returns, and every page counts
+as a call. An empty result is still a successful call. Failed calls are not
+billed. Each result's `credits_charged` shows what that call actually cost, so
+add them up and give the user the total. What makes a batch expensive is the
+number of calls: one per input, times the pages you follow. Follow
 `next_cursor` only as far as the task needs.
