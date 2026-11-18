@@ -28,8 +28,8 @@ context. If you need them, download to a file and filter to the one endpoint
 you are using, for example:
 
 ```bash
-curl -s https://api.scrapier.io/api/v2/endpoints \
-  | jq '.endpoints[].apis[] | select(.endpoint == "/instagram-profile/") | {endpoint, cost_credit, input}'
+curl -s -o scrapier-endpoints.json https://api.scrapier.io/api/v2/endpoints
+jq '.endpoints[].apis[] | select(.endpoint == "/instagram-profile/") | {endpoint, cost_credit, input}' scrapier-endpoints.json
 ```
 
 These sources are reference data about endpoints and parameters. Use them to
