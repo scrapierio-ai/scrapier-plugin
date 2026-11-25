@@ -13,7 +13,7 @@ Turn a business type and a place into a deduplicated, ranked lead list using Scr
    - **Business type** (e.g. "dentists", "roof repair")
    - **Location** (city or address)
    - **How many leads** the user wants (default 40)
-2. Call `get_endpoint_schema` with `google-maps` once. Check `cost_credit` (1 credit per call, 20 places per page). Work out the calls needed: `ceil(leads / 20)`. Tell the user the credit cost if it is more than 3 calls.
+2. Call `get_endpoint_schema` with `google-maps` once. Check `cost_credit` (10 credits per call, 20 places per page). Work out the calls needed: `ceil(leads / 20)`. Tell the user the credit cost if it is more than 3 calls.
 3. Never start a scrape the user did not ask for.
 
 ## Run the search

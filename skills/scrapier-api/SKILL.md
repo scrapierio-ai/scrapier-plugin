@@ -133,7 +133,7 @@ after 3 to 5 attempts; return every other status to the caller at once.
 ## 7. Credits
 
 - A successful call costs the endpoint's `cost_credit` (in the catalog, or from
-  `get_endpoint_schema`; most endpoints cost 1 credit), however many results it
+  `get_endpoint_schema`; most endpoints cost 10 credits), however many results it
   returns. An empty page costs the same as a full one.
 - Failed calls are free. `GET /me`, `/endpoints` and `/openapi.json` are free.
 - Before running code that loops over many inputs or pages, tell the user
