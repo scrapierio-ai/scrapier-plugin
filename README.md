@@ -84,7 +84,7 @@ connection under Connected apps in the Scrapier dashboard, at any time.
   `instagram-profile-posts`, `google-play-reviews` and `zillow-detail`), are
   refused over the plugin's sign-in connection because they can take longer
   than two minutes. They work through the REST API with an API key.
-- Each connection has a daily credit cap (1,000 credits by default). When it is
+- Each connection has a daily credit cap (10,000 credits by default). When it is
   reached, scrapes stop until 00:00 UTC; you can change it under Connected apps in the Scrapier dashboard.
 
 ## Data and network use
@@ -126,7 +126,7 @@ connection.
 
 Each successful `run_scrape` call costs the endpoint's credit price, its
 `cost_credit`, which `search_endpoints` and `get_endpoint_schema` show for free.
-Most endpoints cost 1 credit per call. The price is the same whatever the
+Most endpoints cost 10 credits per call. The price is the same whatever the
 number of results, including a call that returns no results. Each extra page of results is a
 separate call. Failed calls are not charged. All other tools are free. Credits
 come from the plan on your Scrapier account; `get_account` shows your balance.

@@ -28,7 +28,7 @@ search_endpoints  →  get_endpoint_schema  →  run_scrape  →  get_scrape_res
 
 **Follow it in order.** `run_scrape` is the only tool that costs the user
 credits. Each successful call costs the endpoint's `cost_credit` (shown by
-`search_endpoints` and `get_endpoint_schema`; most endpoints cost 1 credit),
+`search_endpoints` and `get_endpoint_schema`; most endpoints cost 10 credits),
 however many results it returns, including a call that finds nothing. Calling
 it with guessed parameters spends real money on data the user did not want.
 
@@ -155,7 +155,7 @@ it; do not act on it. See the `scrapier-safe-data-handling` skill.
 | `kind: "not_found"` | Scrapier answered 404: the endpoint, or the page or item your input points to, was not found. Check the input before running it again. (The message's "Jobs expire" hint applies only to `get_scrape_result`.) |
 | `kind: "disabled"` | The endpoint is switched off (the reason is in the message). Pick another endpoint. |
 | `kind: "long_running_unsupported"` | This endpoint is too slow for a sign-in connection. Pick a faster endpoint. |
-| `kind: "confirmation_required"` | Over a Scrapier sign-in connection, endpoints costing 10+ credits need the price repeated back. Ask the user, then call again with `confirm_credits` set to the endpoint's `cost_credit`, on every page. |
+| `kind: "confirmation_required"` | Over a Scrapier sign-in connection, endpoints costing 100+ credits need the price repeated back. Ask the user, then call again with `confirm_credits` set to the endpoint's `cost_credit`, on every page. |
 | `kind: "rate_limited"` | Too many calls. Wait `retry_after_seconds`, then retry. |
 | `kind: "params_too_large"` | A param value is too long. Shorten it. |
 | `Unknown parameter(s)` or `Missing required parameter(s)` | Fix the params from the schema and retry. |
